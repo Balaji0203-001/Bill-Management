@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Management System - Tech Titans</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bill Management System - Tech Titans</h1>
+        <form id="billForm">
+            <label for="billName">Shop Name</label>
+            <input type="text" id="billName" name="billName" required>
+
+            <label for="billNumber">Contact Number</label>
+            <input type="text" id="billNumber" name="billNumber" required>
+
+            <label for="description">Material</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+
+            <label for="billDate">Bill Date</label>
+            <input type="date" id="billDate" name="billDate" required>
+
+            <label for="billAmount">Bill Amount</label>
+            <input type="number" id="billAmount" name="billAmount" required>
+
+            <label for="payerName">Paid By</label>
+            <input type="text" id="payerName" name="payerName" required>
+
+            <label for="returnPaid">Return Paid By </label>
+            <input type="text" id="returnPaid" name="returnPaid" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+    </script>
+</body>
+</html>
