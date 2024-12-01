@@ -12,9 +12,11 @@ document.getElementById('billForm').addEventListener('submit', function(e) {
     .then(result => {
         document.getElementById('result').innerText = 'Bill submitted successfully!';
         this.reset();
+        alert('Data added successfully!'); 
     })
     .catch(error => {
         document.getElementById('result').innerText = 'Error submitting bill!';
+        alert('Error submitting data!');
         console.error('Error:', error);
     });
 });
