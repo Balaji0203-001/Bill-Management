@@ -1,72 +1,101 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('billForm');
-    const imageInput = document.getElementById('billImage');
-    const imagePreview = document.getElementById('imagePreview');
-    const resultMessage = document.getElementById('result');
+document.addEventListener('DOMContentLoaded', () => {
+    const signUpContainer = document.getElementById('signUpContainer');
+    const signInContainer = document.getElementById('signInContainer');
+    const toSignInLink = document.getElementById('toSignIn');
+    const toSignUpLink = document.getElementById('toSignUp');
 
-    // Image Preview Functionality
-    imageInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block';
-            }
-            
-            reader.readAsDataURL(file);
-        }
+    const signUpForm = document.getElementById('signUpForm');
+    const signInForm = document.getElementById('signInForm');
+
+    const signUpButton = document.getElementById('signUpButton');
+    const signInButton = document.getElementById('signInButton');
+
+    const showLoading = (button) => {
+        button.classList.add('loading');
+    };
+
+    const hideLoading = (button) => {
+        button.classList.remove('loading');
+    };
+
+    toSignInLink.addEventListener('click', () => {
+        signUpContainer.classList.remove('active');
+        signInContainer.classList.add('active');
     });
 
-    // Form Submission
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault();
-        
-        // Collect form data
-        const formData = new FormData(form);
-        const imageFile = formData.get('billImage');
-        
-        // Convert image to base64
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-            const base64Image = e.target.result.split(',')[1];
-            
-            // Prepare data to send
-            const data = {
-                billName: formData.get('billName'),
-                billNumber: formData.get('billNumber'),
-                description: formData.get('description'),
-                billDate: formData.get('billDate'),
-                billAmount: formData.get('billAmount'),
-                payerName: formData.get('payerName'),
-                returnPaid: formData.get('returnPaid'),
-                base64: base64Image,
-                type: imageFile.type,
-                name: imageFile.name
-            };
-            
-            try {
-                // Replace with your Google Apps Script Web App URL
-                const response = await fetch('https://script.google.com/macros/s/AKfycbx3RRrE3dmysOWFf40jEXjXKagnYatsstAyPy3huTl-lZnuxrJgLIUCkNrjbMT-IZxy/exec', {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.text();
-                resultMessage.textContent = result;
-                resultMessage.style.color = 'green';
-                
-                // Reset form and preview
-                form.reset();
-                imagePreview.style.display = 'none';
-            } catch (error) {
-                console.error('Error:', error);
-                resultMessage.textContent = 'Submission failed. Please try again.';
-                resultMessage.style.color = 'red';
-            }
-        };
-        
-        reader.readAsDataURL(imageFile);
+    toSignUpLink.addEventListener('click', () => {
+        signInContainer.classList.remove('active');
+        signUpContainer.classList.add('active');
     });
+
+    if (signUpForm) {
+        signUpForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showLoading(signUpButton);
+
+            setTimeout(() => {
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const signUpMessage = document.getElementById('signUpMessage');
+
+                if (password !== confirmPassword) {
+                    signUpMessage.textContent = 'Passwords do not match!';
+                    hideLoading(signUpButton);
+                    return;
+                }
+
+                const userData = {
+                    username: username,
+                    email: email,
+                    password: password
+                };
+
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push(userData);
+                localStorage.setItem('users', JSON.stringify(users));
+
+                signUpMessage.textContent = 'Sign up successful!';
+                signUpMessage.style.color = 'green';
+
+                // Switch to sign in
+                setTimeout(() => {
+                    hideLoading(signUpButton);
+                    signUpContainer.classList.remove('active');
+                    signInContainer.classList.add('active');
+                }, 1000);
+            }, 1000); // Simulate network delay
+        });
+    }
+
+    if (signInForm) {
+        signInForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showLoading(signInButton);
+
+            setTimeout(() => {
+                const username = document.getElementById('signInUsername').value;
+                const password = document.getElementById('signInPassword').value;
+                const signInMessage = document.getElementById('signInMessage');
+
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                const user = users.find(user => user.username === username && user.password === password);
+
+                if (user) {
+                    signInMessage.textContent = 'Sign in successful!';
+                    signInMessage.style.color = 'green';
+                    // Redirect to the Dashboard
+                    setTimeout(() => {
+                        hideLoading(signInButton);
+                        window.location.href = 'Dashboard.html';
+                    }, 1000);
+                } else {
+                    signInMessage.textContent = 'Invalid username or password';
+                    signInMessage.style.color = 'red';
+                    hideLoading(signInButton);
+                }
+            }, 1000); // Simulate network delay
+        });
+    }
 });

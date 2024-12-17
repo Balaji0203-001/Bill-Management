@@ -2,42 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bill Management System - Tech Titans</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up & Sign In</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Bill Management System - Tech Titans</h1>
-        <form id="billForm">
-            <label for="billName">Shop Name</label>
-            <input type="text" id="billName" name="billName" required>
+    <div id="signUpContainer" class="container active">
+        <h2>Sign Up</h2>
+        <form id="signUpForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
             
-            <label for="billNumber">Contact Number</label>
-            <input type="tel" id="billNumber" name="billNumber" required pattern="[0-9]{10}">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
             
-            <label for="description">Material</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
             
-            <label for="billDate">Bill Date</label>
-            <input type="date" id="billDate" name="billDate" required>
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
             
-            <label for="billAmount">Bill Amount</label>
-            <input type="number" id="billAmount" name="billAmount" min="0" step="0.01" required>
-            
-            <label for="payerName">Paid By</label>
-            <input type="text" id="payerName" name="payerName" required>
-            
-            <label for="returnPaid">Return Paid By</label>
-            <input type="text" id="returnPaid" name="returnPaid" required>
-            
-            <label for="billImage">Upload Bill Image</label>
-            <input type="file" id="billImage" name="billImage" accept="image/*" required>
-            
-            <img id="imagePreview" alt="Image Preview" />
-            
-            <button type="submit">Submit Bill</button>
+            <button type="submit" id="signUpButton">Sign Up</button>
         </form>
-        <p id="result"></p>
+        <p>Already have an account? <a id="toSignIn">Sign In</a></p>
+        <div id="signUpMessage"></div>
+    </div>
+    <div id="signInContainer" class="container">
+        <h2>Sign In</h2>
+        <form id="signInForm">
+            <label for="username">Username</label>
+            <input type="text" id="signInUsername" name="username" required>
+            
+            <label for="password">Password</label>
+            <input type="password" id="signInPassword" name="password" required>
+            
+            <button type="submit" id="signInButton">Sign In</button>
+        </form>
+        <p>Don't have an account? <a id="toSignUp">Sign Up</a></p>
+        <div id="signInMessage"></div>
     </div>
     <script src="script.js"></script>
 </body>

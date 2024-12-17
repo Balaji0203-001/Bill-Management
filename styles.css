@@ -1,26 +1,33 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    position: relative;
 }
 
 .container {
     background-color: #fff;
     padding: 20px;
+    border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 600px;
+    width: 300px;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
+.container.active {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+
+h2 {
+    margin-top: 0;
 }
 
 form {
@@ -29,28 +36,65 @@ form {
 }
 
 label {
-    margin-bottom: 5px;
-    color: #333;
+    margin: 10px 0 5px;
 }
 
-input, textarea {
-    padding: 8px;
-    margin-bottom: 15px;
+input {
+    padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 5px;
 }
 
 button {
     padding: 10px;
-    background-color: #28a745;
-    border: none;
-    border-radius: 4px;
+    background-color: #007BFF;
     color: #fff;
-    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+button.loading {
+    cursor: not-allowed;
+}
+
+button.loading:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+button:hover:not(.loading) {
+    background-color: #0056b3;
+}
+
+p {
+    text-align: center;
+}
+
+a {
+    color: #007BFF;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #218838;
+#signUpMessage, #signInMessage {
+    margin-top: 10px;
+    color: red;
+    text-align: center;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
