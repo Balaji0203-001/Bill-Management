@@ -88,14 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Redirect to the Dashboard
                     setTimeout(() => {
                         hideLoading(signInButton);
-                        window.location.href = 'Dashboard.html';
+                        window.location.href = 'dashboard.html';
                     }, 1000);
                 } else {
                     signInMessage.textContent = 'Invalid username or password';
                     signInMessage.style.color = 'red';
                     hideLoading(signInButton);
                 }
-            }, 1000); // Simulate network delay
+            }, 500); // Simulate network delay
         });
     }
 });
