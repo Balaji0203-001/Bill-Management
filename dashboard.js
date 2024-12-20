@@ -1,274 +1,166 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const logoutButton = document.getElementById('logoutButton');
-    const addBillButton = document.getElementById('addBillButton');
+document.addEventListener('DOMContentLoaded', function () {
+    // Define constants for buttons and sections
     const viewBillsButton = document.getElementById('viewBills');
     const searchBillsButton = document.getElementById('searchBills');
     const addSupplierButton = document.getElementById('addSupplier');
-    const showTotalsButton = document.getElementById('showTotals');
     const viewSuppliersButton = document.getElementById('viewSuppliers');
-    const billSection = document.getElementById('billSection');
-    const totalsSection = document.getElementById('totalsSection');
-    const searchSection = document.getElementById('searchSection');
-    const supplierSection = document.getElementById('supplierSection');
-    const addBillSection = document.getElementById('addBillSection');
-    const addSupplierSection = document.getElementById('addSupplierSection');
-    const billsTableBody = document.getElementById('billsTableBody');
-    const suppliersTableBody = document.getElementById('suppliersTableBody');
-    const totalAmount = document.getElementById('totalAmount');
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
+    const showTotalsButton = document.getElementById('showTotals');
+    const addBillButton = document.getElementById('addBillButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const addMoreItemsButton = document.getElementById('addMoreItemsButton');
+
     const addBillForm = document.getElementById('addBillForm');
     const addSupplierForm = document.getElementById('addSupplierForm');
-    const itemsSection = document.getElementById('itemsSection');
+    const billsTableBody = document.getElementById('billsTableBody');
+    const suppliersTableBody = document.getElementById('suppliersTableBody');
+    const searchResults = document.getElementById('searchResults');
+
+    const billSection = document.getElementById('billSection');
+    const searchSection = document.getElementById('searchSection');
+    const addBillSection = document.getElementById('addBillSection');
+    const addSupplierSection = document.getElementById('addSupplierSection');
+    const supplierSection = document.getElementById('supplierSection');
+    const totalsSection = document.getElementById('totalsSection');
+
+    const viewMoreModal = document.getElementById('viewMoreModal');
+    const supplierDetailsModal = document.getElementById('supplierDetailsModal');
+    const closeModalButtons = document.querySelectorAll('.close-button');
+
     const loadingSpinnerBill = document.getElementById('loadingSpinnerBill');
     const loadingSpinnerSupplier = document.getElementById('loadingSpinnerSupplier');
-    const billImageInput = document.getElementById('billImage');
 
-    let bills = JSON.parse(localStorage.getItem('bills')) || [];
-    let suppliers = JSON.parse(localStorage.getItem('suppliers')) || [];
-    let items = [];
+    // Event listeners for menu items
+    viewBillsButton.addEventListener('click', () => toggleSection(billSection));
+    searchBillsButton.addEventListener('click', () => toggleSection(searchSection));
+    addSupplierButton.addEventListener('click', () => toggleSection(addSupplierSection));
+    viewSuppliersButton.addEventListener('click', () => toggleSection(supplierSection));
+    showTotalsButton.addEventListener('click', () => toggleSection(totalsSection));
+    addBillButton.addEventListener('click', () => toggleSection(addBillSection));
+    logoutButton.addEventListener('click', logout);
 
-    // Function to render Bills
-    const renderBills = () => {
-        billsTableBody.innerHTML = '';
-        bills.forEach((bill, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${bill.shopName || ''}</td>
-                <td>${bill.amount || ''}</td>
-                <td>${bill.billDate || ''}</td>
-                <td><button class="deleteBillButton" data-index="${index}" data-id="${bill.id}">Delete</button></td>
-            `;
-            billsTableBody.appendChild(row);
-        });
+    // Event listener for adding more items in the Add Bill section
+    addMoreItemsButton.addEventListener('click', addItem);
 
-        // Delete Bill button functionality
-        document.querySelectorAll('.deleteBillButton').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const billIndex = e.target.getAttribute('data-index');
-                bills.splice(billIndex, 1);
-                localStorage.setItem('bills', JSON.stringify(bills));
-                renderBills();
+    // Event listeners for modals
+    closeModalButtons.forEach(button => button.addEventListener('click', closeModal));
+
+    // Toggle visibility of sections
+    function toggleSection(section) {
+        const sections = document.querySelectorAll('.main-content > div');
+        sections.forEach(sec => sec.style.display = 'none'); // Hide all sections
+        section.style.display = 'block'; // Show the selected section
+    }
+
+    // Logout function
+    function logout() {
+        alert('Logged out successfully!');
+        // Add actual logout logic here (e.g., redirect to login page)
+    }
+
+    // Add an item input field in the Add Bill section
+    function addItem() {
+        const itemsSection = document.getElementById('itemsSection');
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('item');
+        itemDiv.innerHTML = `
+           <div class="textbox">
+    <div class="input-group">
+        <label for="itemName">Item Name:</label>
+        <input type="text" name="itemName" id="itemName" required placeholder="Enter item name" class="input-field">
+    </div>
+    
+    <div class="input-group">
+        <label for="itemQuantity">Quantity:</label>
+        <input type="number" name="itemQuantity" id="itemQuantity" required placeholder="Enter quantity" class="input-field">
+    </div>
+    
+    <div class="input-group">
+        <label for="itemPrice">Price per Item:</label>
+        <input type="number" name="itemPrice" id="itemPrice" required placeholder="Enter price per item" class="input-field">
+    </div>
+</div>
+
+
+        `;
+        itemsSection.appendChild(itemDiv);
+
+        // Add event listener to the remove button
+        const removeButton = itemDiv.querySelector('.removeItemButton');
+        if (removeButton) {
+            removeButton.addEventListener('click', () => {
+                itemsSection.removeChild(itemDiv);
             });
-        });
-    };
+        }
+    }
 
-    // Function to render Suppliers
-    const renderSuppliers = () => {
-        suppliersTableBody.innerHTML = '';
-        suppliers.forEach((supplier, index) => {
+    // Close modals
+    function closeModal() {
+        viewMoreModal.style.display = 'none';
+        supplierDetailsModal.style.display = 'none';
+    }
+
+    // View more details for a bill
+    function viewBillDetails(billId) {
+        const billDetails = {
+            quantity: 10,
+            price: 100,
+            totalAmount: 1000,
+            paidBy: 'Customer A',
+            returnPaidBy: 'Customer B',
+            imageUrl: 'https://example.com/bill-image.jpg'
+        };
+        document.getElementById('quantityDetail').textContent = billDetails.quantity;
+        document.getElementById('priceDetail').textContent = billDetails.price;
+        document.getElementById('totalAmountDetail').textContent = billDetails.totalAmount;
+        document.getElementById('paidByDetail').textContent = billDetails.paidBy;
+        document.getElementById('returnPaidByDetail').textContent = billDetails.returnPaidBy;
+        document.getElementById('imageUrlDetail').href = billDetails.imageUrl;
+        viewMoreModal.style.display = 'block';
+    }
+
+    // View more details for a supplier
+    function viewSupplierDetails(supplierId) {
+        const supplier = suppliers.find(s => s.id === supplierId);
+        if (supplier) {
+            document.getElementById('supplierContact').textContent = supplier.contact;
+            document.getElementById('supplierMapLink').href = supplier.mapLink;
+            supplierDetailsModal.style.display = 'block';
+        }
+    }
+
+    // Delete a supplier
+    function deleteSupplier(supplierId) {
+        const index = suppliers.findIndex(s => s.id === supplierId);
+        if (index !== -1) {
+            suppliers.splice(index, 1); // Remove supplier from the array
+            populateSuppliersTable(); // Refresh table
+        }
+    }
+
+    // Populate suppliers table
+    function populateSuppliersTable() {
+        suppliersTableBody.innerHTML = ''; // Clear existing rows
+        suppliers.forEach(supplier => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${supplier.supplierName || ''}</td>
-                <td>${supplier.supplierContact || ''}</td>
-                <td>${supplier.supplierShop || ''}</td>
-                <td><button class="deleteSupplierButton" data-index="${index}">Delete</button></td>
+                <td>${supplier.id}</td>
+                <td>${supplier.name}</td>
+                <td>${supplier.shop}</td>
+                <td>
+                    <button class="view-more-button" onclick="viewSupplierDetails(${supplier.id})">View More</button>
+                    <button class="delete-button" onclick="deleteSupplier(${supplier.id})">Delete</button>
+                </td>
             `;
             suppliersTableBody.appendChild(row);
         });
+    }
 
-        // Delete Supplier button functionality
-        document.querySelectorAll('.deleteSupplierButton').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const supplierIndex = e.target.getAttribute('data-index');
-                suppliers.splice(supplierIndex, 1);
-                localStorage.setItem('suppliers', JSON.stringify(suppliers));
-                renderSuppliers();
-            });
-        });
-    };
+    // Example data
+    const suppliers = [
+        { id: 1, name: "Supplier A", shop: "Shop A", contact: "1234567890", mapLink: "https://maps.google.com" },
+        { id: 2, name: "Supplier B", shop: "Shop B", contact: "0987654321", mapLink: "https://maps.google.com" }
+    ];
 
-    // Function to calculate and show the total amount of the bills
-    const calculateTotal = () => {
-        const total = bills.reduce((sum, bill) => sum + parseFloat(bill.amount), 0);
-        totalAmount.textContent = `Total Amount: $${total.toFixed(2)}`;
-    };
-
-    // Function to search bills
-    const searchBills = (query) => {
-        searchResults.innerHTML = '';
-        const filteredBills = bills.filter(bill => bill.shopName.toLowerCase().includes(query.toLowerCase()));
-        filteredBills.forEach((bill, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${bill.shopName || ''}</td>
-                <td>${bill.amount || ''}</td>
-                <td>${bill.billDate || ''}</td>
-            `;
-            searchResults.appendChild(row);
-        });
-    };
-
-    // Handle navigation between sections
-    logoutButton.addEventListener('click', () => {
-        window.location.href = 'index.html';
-    });
-
-    addBillButton.addEventListener('click', () => {
-        billSection.style.display = 'none';
-        totalsSection.style.display = 'none';
-        searchSection.style.display = 'none';
-        supplierSection.style.display = 'none';
-        addBillSection.style.display = 'block';
-        addSupplierSection.style.display = 'none';
-    });
-
-    viewBillsButton.addEventListener('click', () => {
-        billSection.style.display = 'block';
-        totalsSection.style.display = 'none';
-        searchSection.style.display = 'none';
-        supplierSection.style.display = 'none';
-        addBillSection.style.display = 'none';
-        addSupplierSection.style.display = 'none';
-    });
-
-    viewSuppliersButton.addEventListener('click', () => {
-        billSection.style.display = 'none';
-        totalsSection.style.display = 'none';
-        searchSection.style.display = 'none';
-        supplierSection.style.display = 'block';
-        addBillSection.style.display = 'none';
-        addSupplierSection.style.display = 'none';
-    });
-
-    showTotalsButton.addEventListener('click', () => {
-        calculateTotal();
-        billSection.style.display = 'none';
-        totalsSection.style.display = 'block';
-        searchSection.style.display = 'none';
-        supplierSection.style.display = 'none';
-        addBillSection.style.display = 'none';
-        addSupplierSection.style.display = 'none';
-    });
-
-    searchBillsButton.addEventListener('click', () => {
-        billSection.style.display = 'none';
-        totalsSection.style.display = 'none';
-        searchSection.style.display = 'block';
-        supplierSection.style.display = 'none';
-        addBillSection.style.display = 'none';
-        addSupplierSection.style.display = 'none';
-    });
-
-    addSupplierButton.addEventListener('click', () => {
-        billSection.style.display = 'none';
-        totalsSection.style.display = 'none';
-        searchSection.style.display = 'none';
-        supplierSection.style.display = 'none';
-        addBillSection.style.display = 'none';
-        addSupplierSection.style.display = 'block';
-    });
-
-    // Function to add new item
-    document.getElementById('addMoreItemsButton').addEventListener('click', () => {
-        const itemName = prompt("Enter Item Name:");
-        const itemQuantity = prompt("Enter Quantity:");
-        const itemPrice = prompt("Enter Price per Item:");
-
-        if (itemName && itemQuantity && itemPrice) {
-            const totalAmount = itemQuantity * itemPrice;
-
-            // Store the item in the items array
-            items.push({ itemName, itemQuantity, itemPrice, totalAmount });
-
-            // Update the total amount for the bill
-            updateTotalAmount();
-        } else {
-            alert("Please provide valid details for the item.");
-        }
-    });
-
-    // Function to update the total amount of the bill
-    const updateTotalAmount = () => {
-        let totalAmount = 0;
-        items.forEach(item => {
-            totalAmount += item.totalAmount;
-        });
-        document.getElementById('amount').value = totalAmount; // Update the Amount field
-    };
-
-    // Function to convert image file to base64 string
-    const getBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.onerror = error => reject(error);
-        });
-    };
-
-    // Add Supplier Form Submission
-    addSupplierForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        loadingSpinnerSupplier.style.display = 'block'; // Show loading spinner
-
-        const formData = new FormData(e.target);
-        formData.append('type', 'supplier');
-
-        fetch('https://script.google.com/macros/s/AKfycbzCG3VDVwpdXnoePQuY6WPOW3zkV3X5Qrz4zsWQzc3Z08ZFJI0-rUvOHYS5Nc_YV9dL/exec', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            suppliers.push(Object.fromEntries(formData)); // Add the new supplier to the list
-            localStorage.setItem('suppliers', JSON.stringify(suppliers)); // Save to localStorage
-            renderSuppliers(); // Re-render the suppliers list
-            e.target.reset();
-            loadingSpinnerSupplier.style.display = 'none'; // Hide loading spinner
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            loadingSpinnerSupplier.style.display = 'none'; // Hide loading spinner if there's an error
-        });
-    });
-
-    // Add Bill Form Submission
-    addBillForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        loadingSpinnerBill.style.display = 'block'; // Show loading spinner
-
-        const formData = new FormData(e.target);
-        formData.append('type', 'bill');
-
-        // Add items to formData as a single string with newline characters
-        const itemsString = items.map(item => `Name: ${item.itemName}, Qty: ${item.itemQuantity}, Price: ${item.itemPrice}, Total: ${item.totalAmount}`).join('\n');
-        formData.append('items', itemsString);
-
-        // Handle the image file input
-        const file = billImageInput.files[0];
-        if (file) {
-            const base64Image = await getBase64(file);
-            formData.append('base64Image', base64Image);
-            formData.append('imageName', file.name);
-            formData.append('imageType', file.type);
-        }
-
-        // Send form data to the server
-        fetch('https://script.google.com/macros/s/AKfycbzCG3VDVwpdXnoePQuY6WPOW3zkV3X5Qrz4zsWQzc3Z08ZFJI0-rUvOHYS5Nc_YV9dL/exec', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            bills.push(Object.fromEntries(formData)); // Add the new bill to the list
-            localStorage.setItem('bills', JSON.stringify(bills)); // Save to localStorage
-            renderBills(); // Re-render the bills list
-            e.target.reset();
-            items = []; // Reset items array
-            loadingSpinnerBill.style.display = 'none'; // Hide loading spinner
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            loadingSpinnerBill.style.display = 'none'; // Hide loading spinner if there's an error
-        });
-    });
-
-    renderBills();
-    renderSuppliers();
+    // Initialize the table on page load
+    populateSuppliersTable();
 });

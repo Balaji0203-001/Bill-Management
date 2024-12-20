@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
+    <div class="navbar">
+        <h1>Dashboard</h1>
+    </div>
+
     <div class="dashboard-container">
         <div class="sidebar">
             <h2>Menu</h2>
@@ -24,6 +28,12 @@
             <h1>Welcome to the Bill Management Dashboard</h1>
 
             <!-- Bill Section -->
+            
+            <!-- Totals Section -->
+            <div class="totals-section" id="totalsSection" style="display:none;">
+                <h2>Bill Totals</h2>
+                <p id="totalAmount"></p>
+            </div>
             <div class="bill-section" id="billSection">
                 <h2>Your Bills</h2>
                 <table>
@@ -31,8 +41,8 @@
                         <tr>
                             <th>Bill ID</th>
                             <th>Shop Name</th>
-                            <th>Amount</th>
                             <th>Bill Date</th>
+                            <th>Item Name</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -41,13 +51,21 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Totals Section -->
-            <div class="totals-section" id="totalsSection" style="display:none;">
-                <h2>Bill Totals</h2>
-                <p id="totalAmount"></p>
+            
+            <!-- Modal for displaying additional details -->
+            <div id="viewMoreModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeModal()">×</span>
+                    <h3>Bill Details</h3>
+                    <p><strong>Quantity:</strong> <span id="quantityDetail"></span></p>
+                    <p><strong>Price per Item:</strong> <span id="priceDetail"></span></p>
+                    <p><strong>Total Amount:</strong> <span id="totalAmountDetail"></span></p>
+                    <p><strong>Paid By:</strong> <span id="paidByDetail"></span></p>
+                    <p><strong>Return Paid By:</strong> <span id="returnPaidByDetail"></span></p>
+                    <p><strong>Image URL:</strong> <a href="#" id="imageUrlDetail" target="_blank">View Image</a></p>
+                </div>
             </div>
-
+            
             <!-- Search Section -->
             <div class="search-section" id="searchSection" style="display:none;">
                 <h2>Search Bills</h2>
@@ -57,8 +75,8 @@
                         <tr>
                             <th>Bill ID</th>
                             <th>Shop Name</th>
-                            <th>Amount</th>
                             <th>Bill Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="searchResults">
@@ -66,7 +84,7 @@
                     </tbody>
                 </table>
             </div>
-
+            
             <!-- Add Bill Section -->
             <div class="add-bill-section" id="addBillSection" style="display:none;">
                 <h2>Add New Bill</h2>
@@ -74,12 +92,18 @@
                     <label for="shopName">Shop Name:</label>
                     <input type="text" id="shopName" name="shopName" required>
 
+                    <label for="billDate">Bill Date:</label>
+                    <input type="date" id="billDate" name="billDate" required>
+                     
                     <h3>Items</h3>
                     <div id="itemsSection">
-                        <!-- Dynamically added items go here -->
+                        <button id="addMoreItemsButton" type="button">Add More Items</button>
+                        <div id="itemsContainer"></div> <!-- Container to hold the dynamically added text boxes -->
                     </div>
-                    <button type="button" id="addMoreItemsButton">Add More Items</button>
-
+                    
+                    
+                  
+                    
                     <label for="amount">Amount:</label>
                     <input type="number" id="amount" name="amount" required>
 
@@ -91,9 +115,6 @@
 
                     <label for="billImage">Bill Image:</label>
                     <input type="file" id="billImage" name="billImage" accept="image/*" required>
-
-                    <label for="billDate">Bill Date:</label>
-                    <input type="date" id="billDate" name="billDate" required>
 
                     <button type="submit" id="submitButton">Add Bill</button>
                     <div id="loadingSpinnerBill" class="spinner" style="display:none;"></div>
@@ -129,7 +150,6 @@
                         <tr>
                             <th>Supplier ID</th>
                             <th>Name</th>
-                            <th>Contact</th>
                             <th>Shop</th>
                             <th>Actions</th>
                         </tr>
@@ -139,9 +159,25 @@
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Modal for viewing more details -->
+            <div id="supplierDetailsModal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close-button" id="closeModal">&times;</span>
+                    <h3>Supplier Details</h3>
+                    <p><strong>Contact:</strong> <span id="supplierContact"></span></p>
+                    <p><strong>Google Map Link:</strong> <a href="#" id="supplierMapLink" target="_blank">View on Map</a></p>
+                </div>
+            </div>
+            
+            
         </div>
     </div>
 
-    <script src="dashboard.js"></script>
+   
+
+    <!-- Add this script for handling "Add More Items" functionality -->
+   
+    <script src="try.js"></script>
 </body>
 </html>
